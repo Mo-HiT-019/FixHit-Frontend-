@@ -1,9 +1,9 @@
 import { useState } from "react";
 import axios from "@/api/axios";
-import Header from "@/components/layouts/Header";
+import HeaderTechAuth from "@/components/technician/HeaderTechAuth";
 import { useNavigate } from "react-router-dom";
 
-const UserSignup = () => {
+const TechnicianSignup = () => {
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
@@ -19,8 +19,8 @@ const UserSignup = () => {
 
   const handleRequestOtp = async () => {
     try {
-      await axios.post("/users/request-otp", { email: formData.email });
-      navigate("/users/verify-otp", { state: { formData } });
+      await axios.post("/technicians/request-otp", { email: formData.email });
+      navigate("/technicians/verify-otp", { state: { formData } });
     } catch (err: any) {
       alert(err.response?.data?.message || "Failed to send OTP");
     }
@@ -28,7 +28,7 @@ const UserSignup = () => {
 
   return (
     <div>
-      <Header />
+      <HeaderTechAuth />
 
       <div
         className="min-h-screen flex items-center justify-center bg-cover bg-center"
@@ -85,5 +85,4 @@ const UserSignup = () => {
   );
 };
 
-export default UserSignup;
-
+export default TechnicianSignup;

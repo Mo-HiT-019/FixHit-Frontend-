@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "@/api/axios";
-import Header from "@/components/layouts/Header";
+import HeaderTechAuth from "@/components/technician/HeaderTechAuth";
 
 const VerifyOtpPage = () => {
   const location = useLocation();
@@ -18,7 +18,7 @@ const VerifyOtpPage = () => {
 
   useEffect(() => {
     if (!formData) {
-      navigate("/users/signup");
+      navigate("/technicians/signup");
     }
   }, [formData, navigate]);
 
@@ -40,14 +40,14 @@ const VerifyOtpPage = () => {
       const { email, ...restData } = formData;
 
 
-      const response = await axios.post("/users/verify-otp", {
+      const response = await axios.post("/technicians/verify-otp", {
         email,
         otp,
         ...restData,
       });
 
       alert("Signup successful!");
-      navigate("/users/login");
+      navigate("/technicians/login");
     } catch (err: any) {
       alert(err.response?.data?.message || "OTP verification failed");
     }
@@ -56,7 +56,7 @@ const VerifyOtpPage = () => {
   const handleResendOtp = async () => {
     try {
       setResending(true);
-      await axios.post("/users/request-otp", { email: formData.email });
+      await axios.post("/technicians/request-otp", { email: formData.email });
       setTimer(300); 
       setResending(false);
       alert("OTP resent to your email.");
@@ -71,7 +71,7 @@ const VerifyOtpPage = () => {
 
   return (
     <div>
-      <Header />
+      <HeaderTechAuth />
 
       <div
         className="min-h-screen flex items-center justify-center bg-cover bg-center"

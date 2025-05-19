@@ -2,10 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "@/api/axios"; 
 import Header from "../../components/layouts/Header";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/slices/userSlice";
+
 
 const Login = () => {
   const navigate = useNavigate();
-
+  const dispatch= useDispatch()
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,7 +22,9 @@ const Login = () => {
         password,
       });
 
-      console.log("User",res)
+      console.log("User",res.data.user)
+      dispatch(setUser(res.data.user))
+     
 
       
       navigate("/users/home"); 

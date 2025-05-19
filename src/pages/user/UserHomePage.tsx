@@ -1,7 +1,12 @@
 
+import { useSelector } from "react-redux";
 import UserHeader from "../../components/layouts/user/HeaderUser";
+import { RootState } from "@/redux/store";
 
 const UserHomePage = () => {
+
+  const user = useSelector((state:RootState)=>state.user)
+  console.log("User from store",user)
   return (
     <>
       <UserHeader />

@@ -27,7 +27,7 @@ const Login = () => {
      
 
       
-      navigate("/users/home"); 
+      navigate("/home"); 
     } catch (error: any) {
       alert(error.response?.data?.message || "Login failed");
     }
@@ -42,7 +42,8 @@ const Login = () => {
         style={{ backgroundImage: "url('/images/auth.jpg')" }}
       >
         <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md backdrop-blur-sm bg-opacity-90">
-          <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
+          <h1 className="text-3xl font-bold text-center m-2">F!xH!t</h1>
+          <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -79,7 +80,7 @@ const Login = () => {
               <Link to="/forgot-password" className="text-black hover:underline">
                 Forgot password?
               </Link>
-              <Link to="signup" className="text-black hover:underline">
+              <Link to="/signup" className="text-black hover:underline">
                 Don't have an account? Sign up
               </Link>
             </div>

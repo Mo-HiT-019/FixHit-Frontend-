@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "@/api/axios";
 import Header from "@/components/layouts/Header";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const UserSignup = () => {
   const [formData, setFormData] = useState({
@@ -20,9 +21,10 @@ const UserSignup = () => {
   const handleRequestOtp = async () => {
     try {
       await axios.post("/users/request-otp", { email: formData.email });
-      navigate("/users/verify-otp", { state: { formData } });
+      navigate("/verify-otp", { state: { formData } });
     } catch (err: any) {
-      alert(err.response?.data?.message || "Failed to send OTP");
+      console.log(err.response?.data?.message)
+      toast.error("Failed to send OTP")
     }
   };
 
@@ -35,6 +37,7 @@ const UserSignup = () => {
         style={{ backgroundImage: "url('/images/auth.jpg')" }}
       >
         <div className="bg-black bg-opacity-90 p-8 rounded-lg shadow-lg w-full max-w-md">
+          <h1 className="text-3xl text-white font-bold text-center m-2">F!xH!t</h1>
           <h2 className="text-2xl text-white mb-4 text-center">Sign up to FixHit</h2>
 
           <input
@@ -75,9 +78,9 @@ const UserSignup = () => {
 
           <button
             onClick={handleRequestOtp}
-            className="bg-white text-black px-4 py-2 rounded w-full"
+            className="bg-white text-black font-semibold px-4 py-2 rounded w-full"
           >
-            Send OTP
+            Sign Up
           </button>
         </div>
       </div>

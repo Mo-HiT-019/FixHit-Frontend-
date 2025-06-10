@@ -2,11 +2,19 @@ import {createSlice,PayloadAction} from '@reduxjs/toolkit';
 
 interface UserState {
     user:{
-    _id?: string;
-    fullname?: string;
-    email?: string;
-    avatar?: string;
-    role?: string;
+    _id?:string;
+    fullname:string;
+    email:string;
+    password:string;
+    dob? : Date;
+    mobile?: String
+    profilePic?: String
+    gender?: 'male' | 'female' | 'other';
+    address?:String;
+    wallet:number;
+    isBlocked:boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
     } | null;
 }
 

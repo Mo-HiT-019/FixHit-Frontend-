@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const axiosInstance = axios.create({
+const axiosInstanceTech = axios.create({
   baseURL: "http://localhost:5000/api", 
   withCredentials: true, 
   headers: {
@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
   },
 });
 
-axiosInstance.interceptors.response.use(
+axiosInstanceTech.interceptors.response.use(
   (response)=>response,
   async(error)=>{
     const orginalRequest = error.config;
@@ -19,9 +19,9 @@ axiosInstance.interceptors.response.use(
       try{
         console.log("Trying to refresh token");
         
-        await axiosInstance.get("/refresh-token");
+        await axiosInstanceTech.get("/refresh-token");
 
-        return axiosInstance(orginalRequest);
+        return axiosInstanceTech(orginalRequest);
       }catch(refreshError){
         console.log("Refresh token expired or invalid");
         window.location.href = '/login';
@@ -31,4 +31,4 @@ axiosInstance.interceptors.response.use(
   }
 )
 
-export default axiosInstance;
+export default axiosInstanceTech;

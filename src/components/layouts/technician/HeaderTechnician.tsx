@@ -2,48 +2,42 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
-import { clearUser } from "@/redux/slices/userSlice";
+import { clearTechnician } from "@/redux/slices/technicianSlice";
 import {HomeIcon,CalendarIcon,BellIcon,Bars3Icon,XMarkIcon,UserCircleIcon,} from "@heroicons/react/24/outline";
 
-const UserHeader: React.FC = () => {
+const HeaderTechnician: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const user = useSelector((state: RootState) => state.user.user);
+
+  const technician = useSelector((state:RootState)=>state.technician.technician)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log("user from store,",user)
+  console.log("Technician from store,",technician)
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const handleLogout = () => {
-    dispatch(clearUser());
-    navigate("/login");
+    dispatch(clearTechnician());
+    navigate("/technicians/login");
   };
 
   return (
     <header className="bg-black text-white px-6 py-3 shadow-md">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">F!xH!t</h1>
+        <h1 className="text-xl font-bold">F!xH!t Technicians</h1>
 
         <nav className="hidden md:flex items-center space-x-6">
-          <Link to="/home" className="hover:text-gray-300 flex items-center space-x-1">
-            <HomeIcon className="h-5 w-5" />
-            <span>Home</span>
-          </Link>
-          <Link to="/bookings" className="hover:text-gray-300 flex items-center space-x-1">
-            <CalendarIcon className="h-5 w-5" />
-            <span>Bookings</span>
-          </Link>
+
           <Link to="/notifications" className="hover:text-gray-300 flex items-center space-x-1">
             <BellIcon className="h-5 w-5" />
             <span>Notifications</span>
           </Link>
 
-          {user && (
+          {technician && (
             <div className="flex items-center space-x-3">
-              <Link to="/profile" className="hover:text-gray-300 flex items-center space-x-2">
+              <Link to="/user/profile" className="hover:text-gray-300 flex items-center space-x-2">
                 <UserCircleIcon className="h-6 w-6" />
-                <span className="text-sm">{user.fullname? (user.fullname.split(" ")[0]) : ""}</span>
+                <span className="text-sm">{technician.fullname? (technician.fullname.split(" ")[0]) : ""}</span>
               </Link>
               <button
                 onClick={handleLogout}
@@ -71,11 +65,11 @@ const UserHeader: React.FC = () => {
           <Link to="/notifications" className="block hover:text-gray-300">
             Notifications
           </Link>
-          {user && (
+          {technician && (
             <div className="flex items-center justify-between mt-2">
               <Link to="/user/profile" className="flex items-center space-x-2">
                 <UserCircleIcon className="h-6 w-6" />
-                <span className="text-sm">{user.fullname? (user.fullname.split(" ")[0]) : ""}</span>
+                <span className="text-sm">{technician.fullname? (technician.fullname.split(" ")[0]) : ""}</span>
               </Link>
               <button
                 onClick={handleLogout}
@@ -91,4 +85,4 @@ const UserHeader: React.FC = () => {
   );
 };
 
-export default UserHeader;
+export default HeaderTechnician;

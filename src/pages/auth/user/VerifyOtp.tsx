@@ -18,7 +18,7 @@ const VerifyOtpPage = () => {
 
   useEffect(() => {
     if (!formData) {
-      navigate("/users/signup");
+      navigate("/signup");
     }
   }, [formData, navigate]);
 
@@ -47,7 +47,7 @@ const VerifyOtpPage = () => {
       });
 
       alert("Signup successful!");
-      navigate("/users/login");
+      navigate("/login");
     } catch (err: any) {
       alert(err.response?.data?.message || "OTP verification failed");
     }

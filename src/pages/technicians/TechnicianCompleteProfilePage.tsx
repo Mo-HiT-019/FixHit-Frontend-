@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstanceTech from '@/api/axiosTechnician';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaUpload, FaUserCircle, FaFileAlt, FaCheckCircle, FaTimesCircle, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaUpload, FaUserCircle, FaFileAlt, FaCheckCircle, FaTimesCircle, FaMapMarkerAlt, FaIdCardAlt } from 'react-icons/fa'; // Added FaIdCardAlt
 import { useSelector } from 'react-redux';
 import { RootState } from "@/redux/store";
 
@@ -16,7 +16,7 @@ const KERALA_DISTRICTS = [
   'Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod',
   'Kollam', 'Kottayam', 'Kozhikode', 'Malappuram', 'Palakkad',
   'Pathanamthitta', 'Thiruvananthapuram', 'Thrissur', 'Wayanad'
-].sort(); 
+].sort();
 
 const TechnicianCompleteProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const TechnicianCompleteProfilePage: React.FC = () => {
       residential: '',
       city: '',
       district: '',
-      state: 'Kerala', 
+      state: 'Kerala',
       pincode: ''
     },
     experience: '',
@@ -43,6 +43,7 @@ const TechnicianCompleteProfilePage: React.FC = () => {
 
   const [profilePic, setProfilePic] = useState<File | null>(null);
   const [documents, setDocuments] = useState<FileList | null>(null);
+  const [verificationIds, setVerificationIds] = useState<FileList | null>(null); 
   const [availableServices, setAvailableServices] = useState<Service[]>([]);
   const [loadingServices, setLoadingServices] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -51,10 +52,10 @@ const TechnicianCompleteProfilePage: React.FC = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        
+
         const res = await axiosInstanceTech.get('/services');
         console.log("getting services",res)
-        setAvailableServices(res.data || []); 
+        setAvailableServices(res.data || []);
       } catch (err) {
         toast.error('Failed to fetch services. Please try again.');
         console.error('Error fetching services:', err);
@@ -68,9 +69,9 @@ const TechnicianCompleteProfilePage: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
 
-  
+
     if (name.startsWith('address.')) {
-      const addressField = name.split('.')[1]; 
+      const addressField = name.split('.')[1];
       setFormData((prev) => ({
         ...prev,
         address: {
@@ -110,6 +111,14 @@ const TechnicianCompleteProfilePage: React.FC = () => {
     }
   };
 
+  const handleVerificationIdsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setVerificationIds(e.target.files);
+    } else {
+      setVerificationIds(null);
+    }
+  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,10 +128,10 @@ const TechnicianCompleteProfilePage: React.FC = () => {
     try {
       const data = new FormData();
 
-     
+
       Object.entries(formData).forEach(([key, value]) => {
         if (key === 'address') {
-      
+
           Object.entries(value).forEach(([addressKey, addressValue]) => {
             data.append(`address[${addressKey}]`, addressValue as string);
           });
@@ -133,7 +142,7 @@ const TechnicianCompleteProfilePage: React.FC = () => {
         }
       });
 
-    
+
       if (profilePic) {
         data.append('profilePic', profilePic);
       } else {
@@ -145,6 +154,13 @@ const TechnicianCompleteProfilePage: React.FC = () => {
       if (documents) {
         Array.from(documents).forEach((doc) => {
           data.append('documents', doc);
+        });
+      }
+
+     
+      if (verificationIds) {
+        Array.from(verificationIds).forEach((doc) => {
+          data.append('verificationId', doc); 
         });
       }
 
@@ -177,11 +193,11 @@ const TechnicianCompleteProfilePage: React.FC = () => {
         onSubmit={handleSubmit}
         className="bg-white p-6 sm:p-8 rounded-lg shadow-xl w-full max-w-2xl space-y-6 border border-gray-200"
       >
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-blue-800 mb-6">
-          <FaUserCircle className="inline-block mr-2 text-blue-600" /> Complete Your Profile
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-black mb-6">
+          <FaUserCircle className="inline-block mr-2 text-black" /> Complete Your Profile
         </h2>
 
-    
+
         <section className="space-y-4">
           <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Personal Details</h3>
           <div>
@@ -225,7 +241,7 @@ const TechnicianCompleteProfilePage: React.FC = () => {
                 <input
                   id="residential"
                   type="text"
-                  name="address.residential" 
+                  name="address.residential"
                   placeholder="House number, street, locality"
                   value={formData.address.residential}
                   onChange={handleChange}
@@ -275,7 +291,7 @@ const TechnicianCompleteProfilePage: React.FC = () => {
                     name="address.state"
                     value={formData.address.state}
                     className="w-full border border-gray-300 rounded-md shadow-sm p-2.5 bg-gray-50 text-gray-600 cursor-not-allowed"
-                    readOnly 
+                    readOnly
                     required
                   />
                 </div>
@@ -283,7 +299,7 @@ const TechnicianCompleteProfilePage: React.FC = () => {
                   <label htmlFor="pincode" className="block text-sm font-medium text-gray-700 mb-1">Pincode</label>
                   <input
                     id="pincode"
-                    type="text" 
+                    type="text"
                     name="address.pincode"
                     placeholder="e.g., 682001"
                     value={formData.address.pincode}
@@ -297,7 +313,7 @@ const TechnicianCompleteProfilePage: React.FC = () => {
           </div>
         </section>
 
-      
+
         <section className="space-y-4 pt-4">
           <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Professional Details</h3>
           <div>
@@ -320,7 +336,7 @@ const TechnicianCompleteProfilePage: React.FC = () => {
               id="certification"
               type="text"
               name="certification"
-              placeholder="e.g., HVAC Certified, CompTIA A+"
+              placeholder="Certifications that you havee"
               value={formData.certification}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md shadow-sm p-2.5 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
@@ -328,21 +344,21 @@ const TechnicianCompleteProfilePage: React.FC = () => {
           </div>
         </section>
 
-      
+
         <section className="space-y-4 pt-4">
           <h3 className="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">Services You Offer <span className="text-red-500 text-sm">*</span></h3>
 
-     
+
           <div className="bg-blue-50 p-4 rounded-md border border-blue-200">
-            <h4 className="text-md font-medium text-blue-800 mb-2">
-              <FaCheckCircle className="inline-block mr-2 text-blue-600" /> Selected Services:
+            <h4 className="text-md font-medium text-black mb-2">
+              <FaCheckCircle className="inline-block mr-2 text-black" /> Selected Services:
             </h4>
             {selectedServiceNames.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {selectedServiceNames.map((serviceName, index) => (
                   <span
                     key={index}
-                    className="bg-blue-600 text-white text-sm px-3 py-1 rounded-full flex items-center shadow-sm"
+                    className="bg-black text-white text-sm px-3 py-1 rounded-full flex items-center shadow-sm"
                   >
                     {serviceName}
                     <FaTimesCircle
@@ -357,11 +373,11 @@ const TechnicianCompleteProfilePage: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <p className="text-blue-700 text-sm">No services selected yet. Click on the cards below to add.</p>
+              <p className="text-black text-sm">No services selected yet. Click on the cards below to add.</p>
             )}
           </div>
 
-   
+
           <div className="mt-4">
             {loadingServices ? (
               <p className="text-gray-600">Loading available services...</p>
@@ -418,9 +434,32 @@ const TechnicianCompleteProfilePage: React.FC = () => {
             {profilePic && <p className="text-xs text-gray-500 mt-1">Selected: {profilePic.name}</p>}
           </div>
 
+         
+          <div>
+            <label htmlFor="verificationIds" className="block text-sm font-medium text-gray-700 mb-1">
+              <FaIdCardAlt className="inline-block mr-1 text-gray-500" /> Upload Verification ID (e.g., Aadhar, Driving License) <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="verificationIds"
+              type="file"
+              accept="image/*,application/pdf"
+              multiple 
+              onChange={handleVerificationIdsChange}
+              className="w-full border border-gray-300 rounded-md p-2 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+              required 
+            />
+            {verificationIds && verificationIds.length > 0 && (
+              <p className="text-xs text-gray-500 mt-1">
+                Selected: {Array.from(verificationIds).map(doc => doc.name).join(', ')}
+              </p>
+            )}
+            <p className="text-xs text-gray-500 mt-1">Accepts PDF and image files. Multiple files can be selected (e.g., front and back of an ID).</p>
+          </div>
+          
+
           <div>
             <label htmlFor="documents" className="block text-sm font-medium text-gray-700 mb-1">
-              <FaFileAlt className="inline-block mr-1 text-gray-500" /> Upload Supporting Documents (e.g., certifications, ID)
+              <FaFileAlt className="inline-block mr-1 text-gray-500" /> Upload Supporting Documents (e.g., other certifications, training docs)
             </label>
             <input
               id="documents"
@@ -435,13 +474,13 @@ const TechnicianCompleteProfilePage: React.FC = () => {
                 Selected: {Array.from(documents).map(doc => doc.name).join(', ')}
               </p>
             )}
-            <p className="text-xs text-gray-500 mt-1">Accepts PDF and image files. Multiple files can be selected.</p>
+            <p className="text-xs text-gray-500 mt-1">Accepts PDF and image files. multiple files can be selected.</p>
           </div>
         </section>
 
         <button
           type="submit"
-          className="mt-8 bg-blue-600 text-white w-full py-3 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out font-semibold text-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-8 bg-black text-white w-full py-3 rounded-md hover:bg-gray-800 transition duration-300 ease-in-out font-semibold text-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={submitting || formData.services.length === 0}
         >
           {submitting ? (

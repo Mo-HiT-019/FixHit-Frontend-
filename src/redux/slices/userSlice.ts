@@ -8,7 +8,7 @@ interface UserState {
     password:string;
     dob? : Date;
     mobile?: String
-    profilePic?: String
+    profilePic?: string
     gender?: 'male' | 'female' | 'other';
     address?:String;
     wallet:number;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "@/api/axios";
 import Header from "@/components/layouts/Header";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const UserSignup = () => {
@@ -82,6 +82,15 @@ const UserSignup = () => {
           >
             Sign Up
           </button>
+
+          <div className="flex flex-col justify-center items-center text-sm mb-4 mt-2">
+              <Link to="/login" className="text-white hover:underline mb-2">
+                Already have an account? Login
+              </Link>
+              <Link to="/technicians/signup" className="text-white font-bold hover:underline">
+                Sign up as a Technician
+              </Link>
+          </div>
         </div>
       </div>
     </div>

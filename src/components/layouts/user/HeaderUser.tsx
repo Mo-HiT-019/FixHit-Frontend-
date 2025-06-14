@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import { clearUser } from "@/redux/slices/userSlice";
 import {HomeIcon,CalendarIcon,BellIcon,Bars3Icon,XMarkIcon,UserCircleIcon,} from "@heroicons/react/24/outline";
+import axiosInstance from "@/api/axios";
 
 const UserHeader: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -17,6 +18,7 @@ const UserHeader: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(clearUser());
+    axiosInstance.post("/users/logout")
     navigate("/login");
   };
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "@/api/axios";
 import Header from "@/components/layouts/Header";
+import { toast } from "react-toastify";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       await axios.post("/users/request-reset-otp", { email });
+      toast.success("Otp has been send to mail")
       navigate("/verify-reset-otp", { state: { email } });
     } catch (err: any) {
       alert(err.response?.data?.message || "Error sending OTP");

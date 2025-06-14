@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import { clearTechnician } from "@/redux/slices/technicianSlice";
 import {HomeIcon,CalendarIcon,BellIcon,Bars3Icon,XMarkIcon,UserCircleIcon,} from "@heroicons/react/24/outline";
+import axiosInstanceTech from "@/api/axiosTechnician";
 
 const HeaderTechnician: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -18,6 +19,7 @@ const HeaderTechnician: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(clearTechnician());
+    axiosInstanceTech.post("/technicians/logout");
     navigate("/technicians/login");
   };
 

@@ -4,6 +4,7 @@ import axios from "@/api/axios";
 import Header from "../../components/layouts/Header";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/slices/userSlice";
+import { toast } from "react-toastify";
 
 
 const Login = () => {
@@ -22,14 +23,24 @@ const Login = () => {
         password,
       });
 
+      
+
       console.log("User",res.data.user)
       dispatch(setUser(res.data.user))
      
 
-      
+      toast.success("Login successful!", {
+              position: "top-right", 
+              autoClose: 2000,       
+            });
       navigate("/home"); 
     } catch (error: any) {
-      alert(error.response?.data?.message || "Login failed");
+      console.log(error.response?.data?.message || "Login failed");
+
+      toast.error("Invalid Credentials",{
+        position:"top-center",
+        autoClose:3000
+      })
     }
   };
 
@@ -70,7 +81,7 @@ const Login = () => {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-white"
                 placeholder="Enter your password"
                 required
               />

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from '@/api/axiosAdmin';
+import axios from '@/api/axiosAdmin'; 
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { UserCircleIcon, IdentificationIcon, AcademicCapIcon, MapPinIcon, DocumentTextIcon, CheckCircleIcon } from '@heroicons/react/24/outline'; // Importing heroicons
+import { UserCircleIcon, IdentificationIcon, AcademicCapIcon, MapPinIcon, DocumentTextIcon, CheckCircleIcon, PhotoIcon } from '@heroicons/react/24/outline'; // Importing heroicons, added PhotoIcon
 
 interface Technician {
   _id: string;
@@ -23,23 +23,27 @@ interface Technician {
   certification?: string;
   services?: string[];
   documents?: string[];
-  isVerified?: boolean; 
+  verificationId?: string[]; 
+  isVerified?: boolean;
+  verificationRequested?: boolean; 
 }
 
 const TechnicianDetailPage: React.FC = () => {
   const { id } = useParams();
   const [technician, setTechnician] = useState<Technician | null>(null);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTechnician = async () => {
       try {
         setLoading(true);
+       
         const res = await axios.get(`admin/technicians/${id}`);
         setTechnician(res.data.technician);
       } catch (err) {
         toast.error('Failed to load technician details');
+        console.error('Fetch technician error:', err);
       } finally {
         setLoading(false);
       }
@@ -49,17 +53,19 @@ const TechnicianDetailPage: React.FC = () => {
 
   const handleVerify = async () => {
     try {
-      await axios.patch(`/admin/technicians/verify/${id}`); 
+      
+      await axios.patch(`/admin/technicians/verify/${id}`);
       toast.success('Technician verified successfully');
-      setTechnician(prev => prev ? { ...prev, isVerified: true } : null); 
-      navigate('/admin/verification-requests');
+      setTechnician(prev => prev ? { ...prev, isVerified: true } : null);
+      navigate('/admin/verification-requests'); 
     } catch (err) {
       toast.error('Failed to verify technician');
+      console.error('Verify technician error:', err);
     }
   };
 
   const handleGoBack = () => {
-    navigate('/admin/verification-requests'); 
+    navigate('/admin/verification-requests');
   };
 
   if (loading) {
@@ -111,6 +117,7 @@ const TechnicianDetailPage: React.FC = () => {
             <p className="text-gray-800 flex items-center"><AcademicCapIcon className="h-5 w-5 mr-2 text-gray-500" /><strong>Experience:</strong> {technician.experience || 'N/A'} years</p>
             <p className="text-gray-800 flex items-center"><AcademicCapIcon className="h-5 w-5 mr-2 text-gray-500" /><strong>Certification:</strong> {technician.certification || 'N/A'}</p>
             <p className="text-gray-800 flex items-center col-span-1 sm:col-span-2"><MapPinIcon className="h-5 w-5 mr-2 text-gray-500" /><strong>Address:</strong> {technician.address?.residential || 'N/A'}, {technician.address?.city || 'N/A'}, {technician.address?.district || 'N/A'}, {technician.address?.state || 'N/A'} - {technician.address?.pincode || 'N/A'}</p>
+           
             <p className="text-gray-800 flex items-center col-span-1 sm:col-span-2"><IdentificationIcon className="h-5 w-5 mr-2 text-gray-500" /><strong>Services:</strong> {technician.services && technician.services.length > 0 ? technician.services.join(', ') : 'N/A'}</p>
             <p className="text-gray-800 flex items-center col-span-1 sm:col-span-2">
                 <CheckCircleIcon className="h-5 w-5 mr-2 text-gray-500" /><strong>Status:</strong> {technician.isVerified ? 'Verified' : 'Pending Verification'}
@@ -118,15 +125,40 @@ const TechnicianDetailPage: React.FC = () => {
           </div>
         </div>
 
+        
+        {technician.verificationId && technician.verificationId.length > 0 && (
+          <div className="mt-6 border-t pt-6">
+            <h3 className="text-xl font-semibold mb-4 flex items-center">
+              <PhotoIcon className="h-6 w-6 mr-2 text-red-600" /> Verification ID Documents
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {technician.verificationId.map((doc, index) => (
+                <a
+                  key={`verify-${index}`}
+                  href={doc}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block p-4 border border-red-300 rounded-lg text-center text-red-600 hover:bg-red-50 hover:border-red-500 transition duration-150 ease-in-out flex flex-col items-center justify-center"
+                >
+                  <PhotoIcon className="h-10 w-10 text-red-500 mb-2" />
+                  <span className="font-medium">View ID Document {index + 1}</span>
+                  <span className="text-xs text-gray-500 truncate w-full">{doc.split('/').pop()}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+        
+
         {technician.documents && technician.documents.length > 0 && (
           <div className="mt-6 border-t pt-6">
             <h3 className="text-xl font-semibold mb-4 flex items-center">
-              <DocumentTextIcon className="h-6 w-6 mr-2 text-gray-600" /> Supporting Documents
+              <DocumentTextIcon className="h-6 w-6 mr-2 text-gray-600" /> Supporting Documents (Certifications etc.)
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {technician.documents.map((doc, index) => (
                 <a
-                  key={index}
+                  key={`doc-${index}`}
                   href={doc}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -142,7 +174,7 @@ const TechnicianDetailPage: React.FC = () => {
         )}
 
         <div className="mt-8 flex justify-center">
-          {!technician.isVerified && ( 
+          {!technician.isVerified && (
             <button
               onClick={handleVerify}
               className="px-8 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 flex items-center"

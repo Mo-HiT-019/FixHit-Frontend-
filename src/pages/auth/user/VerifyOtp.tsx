@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "@/api/axios";
 import Header from "@/components/layouts/Header";
+import { toast } from "react-toastify";
 
 const VerifyOtpPage = () => {
   const location = useLocation();
@@ -46,10 +47,12 @@ const VerifyOtpPage = () => {
         ...restData,
       });
 
-      alert("Signup successful!");
+      toast.success("Verification successful!");
       navigate("/login");
     } catch (err: any) {
-      alert(err.response?.data?.message || "OTP verification failed");
+      toast.error("OTP verification  failed")
+      console.log(err.response?.data?.message || "OTP verification failed");
+      
     }
   };
 

@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState,useEffect } from "react";
 import axios from "@/api/axios";
 import Header from "@/components/layouts/Header";
+import { toast } from "react-toastify";
 
 const VerifyResetOtp = () => {
   const [otp, setOtp] = useState("");
@@ -19,9 +20,11 @@ const VerifyResetOtp = () => {
     e.preventDefault();
     try {
       await axios.post("/users/verify-reset-otp", { email, otp });
+      toast.success("OTP Verified")
       navigate("/reset-password", { state: { email } });
     } catch (err: any) {
-      alert(err.response?.data?.message || "OTP verification failed");
+      toast.error("Invalid OTP")
+      console.log(err.response?.data?.message || "OTP verification failed");
     }
   };
 

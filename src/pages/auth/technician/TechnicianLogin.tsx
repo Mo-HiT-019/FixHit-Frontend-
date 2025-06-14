@@ -4,6 +4,7 @@ import axios from "@/api/axios";
 import HeaderTechAuth from "@/components/technician/HeaderTechAuth";
 import { useDispatch } from "react-redux";
 import { setTechnician } from "@/redux/slices/technicianSlice"; 
+import { toast } from "react-toastify";
 
 const TechnicianLogin = () => {
   const navigate = useNavigate();
@@ -21,7 +22,8 @@ const TechnicianLogin = () => {
       dispatch(setTechnician(res.data.technician)); 
       navigate("/technicians");
     } catch (error: any) {
-      alert(error.response?.data?.message || "Login failed");
+      toast.error("Invalid credentials..")
+      console.log(error.response?.data?.message || "Login failed techys");
     }
   };
 

@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "@/api/axios";
 import Header from "@/components/layouts/Header";
+import { toast } from "react-toastify";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -18,10 +19,11 @@ const ResetPassword = () => {
     e.preventDefault();
     try {
       await axios.post("/users/reset-password", { email, password });
-      alert("Password updated successfully");
+      toast.success("Passord Reset success..")
       navigate("/login");
     } catch (err: any) {
       alert(err.response?.data?.message || "Password reset failed");
+      toast.error("Password reset failed")
     }
   };
 

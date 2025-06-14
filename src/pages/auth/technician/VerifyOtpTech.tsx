@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "@/api/axios";
 import HeaderTechAuth from "@/components/technician/HeaderTechAuth";
+import { toast } from "react-toastify";
 
 const VerifyOtpPage = () => {
   const location = useLocation();
@@ -46,10 +47,11 @@ const VerifyOtpPage = () => {
         ...restData,
       });
 
-      alert("Signup successful!");
+      toast.success("Signup successful!");
       navigate("/technicians/login");
     } catch (err: any) {
-      alert(err.response?.data?.message || "OTP verification failed");
+      toast.error("Invalid Otp")
+      console.log(err.response?.data?.message || "OTP verification failed techy");
     }
   };
 

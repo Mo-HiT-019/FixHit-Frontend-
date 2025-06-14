@@ -48,6 +48,7 @@ const UserProfilePage: React.FC = () => {
     });
 
     if (res.data.success) {
+      console.log("Profiel req data",res.data)
       toast.success("Profile picture uploaded!");
       setSelectedFile(null);
       window.location.reload(); 
@@ -77,7 +78,7 @@ const UserProfilePage: React.FC = () => {
         <div className="flex flex-col items-center mb-6">
           {user.profilePic ? (
             <img
-              //src={user.profilePic}
+              src={user.profilePic}
               alt={`${user.fullname}'s profile`}
               className="w-32 h-32 rounded-full object-cover border-4 border-blue-200 shadow-md"
               onError={(e) => {

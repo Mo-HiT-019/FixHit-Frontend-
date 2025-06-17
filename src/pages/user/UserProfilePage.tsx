@@ -26,45 +26,47 @@ const UserProfilePage: React.FC = () => {
     });
   };
 
-  const handleAddAddress = () => navigate('/user/add-address');
-  const handleViewWallet = () => navigate('/user/wallet');
+  console.log("Address",user.address)
+
+  const handleAddAddress = () => navigate('/add-address');
+  const handleViewWallet = () => navigate('/wallet');
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) setSelectedFile(file);
   };
 
- const handleUpload = async () => {
-  if (!selectedFile) return;
+  const handleUpload = async () => {
+    if (!selectedFile) return;
 
-  const formData = new FormData();
-  formData.append("profilePic", selectedFile);
+    const formData = new FormData();
+    formData.append("profilePic", selectedFile);
 
-  try {
-    const res = await axiosInstance.post("/users/upload-profile-pic", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    try {
+      const res = await axiosInstance.post("/users/upload-profile-pic", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-    if (res.data.success) {
-      console.log("Profiel req data",res.data)
-      toast.success("Profile picture uploaded!");
-      setSelectedFile(null);
-      window.location.reload(); 
-    } else {
-      toast.error("Upload failed");
+      if (res.data.success) {
+        console.log("Profiel req data", res.data)
+        toast.success("Profile picture uploaded!");
+        setSelectedFile(null);
+        window.location.reload();
+      } else {
+        toast.error("Upload failed");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to upload image");
     }
-  } catch (err) {
-    console.error(err);
-    toast.error("Failed to upload image");
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <div className="bg-white rounded-lg shadow-xl p-6 sm:p-8 lg:p-10 max-w-3xl w-full border border-gray-200">
-       
+
         <div className="flex flex-col sm:flex-row items-center sm:justify-between mb-6 border-b pb-4">
           <h2 className="text-3xl font-extrabold text-gray-900 mb-4 sm:mb-0">User Profile</h2>
           <button
@@ -105,7 +107,7 @@ const UserProfilePage: React.FC = () => {
             Change Profile Picture
           </button>
 
- 
+
           {selectedFile && (
             <div className="mt-2 text-center">
               <p className="text-sm text-gray-700">{selectedFile.name}</p>
@@ -146,9 +148,11 @@ const UserProfilePage: React.FC = () => {
               {user.isBlocked ? 'Blocked' : 'Active'}
             </p>
           </div>
+          
         </div>
 
-       
+        
+      
         <div className="mt-10 border-t pt-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-2xl font-semibold text-gray-900">Saved Addresses</h3>
@@ -162,8 +166,14 @@ const UserProfilePage: React.FC = () => {
           {user.address && user.address.length > 0 ? (
             <ul className="space-y-4">
               {user.address.map((addr, idx) => (
-                <li key={idx} className="p-4 bg-gray-50 rounded-lg shadow-sm border">
-                  <p>{addr}</p>
+                <li
+                  key={addr._id || idx}
+                  className="p-4 bg-gray-50 rounded-lg shadow-sm border"
+                >
+                  <p className="font-medium text-gray-800">{addr.residential}</p>
+                  <p className="text-gray-700">{addr.city}, {addr.district}</p>
+                  <p className="text-gray-700">{addr.state} - {addr.pincode}</p>
+                  
                 </li>
               ))}
             </ul>

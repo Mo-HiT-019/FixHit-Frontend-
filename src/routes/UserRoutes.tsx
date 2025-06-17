@@ -10,6 +10,7 @@ import VerifyResetOtp from "@/pages/auth/user/VerifyResetOtp";
 import ResetPassword from "@/pages/auth/user/ResetPassword";
 import UserProfile from "@/pages/user/UserProfilePage";
 import UserLayout from "@/components/layouts/user/UserLayout";
+import AddAddressPage from "@/pages/user/AddAddressPage";
 
 const UserRoutes = () => {
   return (
@@ -31,6 +32,8 @@ const UserRoutes = () => {
        <Route path='/' element={<UserLayout/>}>
             <Route path="home" element={<UserHomePage />} />
             <Route path="profile" element={<UserProfile/>} />
+            <Route path="add-address" element={<AddAddressPage/>} />
+
        </Route> 
       </Route>
     </Routes>

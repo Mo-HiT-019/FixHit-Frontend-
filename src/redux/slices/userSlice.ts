@@ -10,7 +10,13 @@ interface UserState {
     mobile?: String
     profilePic?: string
     gender?: 'male' | 'female' | 'other';
-    address?:String;
+    address?:[{
+        residential?: string;
+        city?: string;
+        district?: string;
+        state?: string;
+        pincode?: string;
+    }];
     wallet:number;
     isBlocked:boolean;
     createdAt?: Date;
